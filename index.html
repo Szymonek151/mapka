@@ -352,16 +352,41 @@
 			
         ];
 		var markersList = [];
-        clubs.forEach(function(club) {
-   			 var pinIcon = L.divIcon({
-		        className: 'custom-div-icon',
-		        html: "<div class='custom-pin'></div>",
-		        iconSize: [30, 30],
-		        iconAnchor: [15, 30] // Punkt styku z ziemią (na dole pinezki)
-		    });
-
-    	var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
-    // ... reszta kodu ...
+		        clubs.forEach(function(club) {
+		            // 1. Definicja nowej ikony (wygląd ustawiasz w CSS)
+		            var pinIcon = L.divIcon({
+		                className: 'custom-div-icon',
+		                html: "<div class='custom-pin'></div>",
+		                iconSize: [30, 30],
+		                iconAnchor: [15, 30] // Dół pinezki celuje w punkt na mapie
+		            });
+		
+		            // 2. Stworzenie markera z użyciem nowej ikony
+		            var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
+		
+		            // 3. Budowanie zawartości okienka (Popup)
+		            var popupContent = '<h4>' + club.name + '</h4>';
+		            
+		            // Sprawdzanie zdjęcia (Twoja oryginalna logika)
+		            if (club.img && club.img.length > 5) {
+		                popupContent += '<img src="' + club.img + '" alt="Herb ' + club.name + '" onerror="this.style.display=\'none\'">';
+		            } else {
+		                popupContent += '<p style="text-align:center; color:#666;">Brak zdjęcia</p>';
+		            }
+		            
+		            // 4. Przypisanie okienka do markera
+		            marker.bindPopup(popupContent, {
+		                closeButton: true,
+		                autoClose: false
+		            });
+		            
+		            // 5. Efekt najechania myszką (Twoja oryginalna logika)
+		            marker.on('mouseover', function(e) { this.openPopup(); });
+		            marker.on('mouseout', function(e) { this.closePopup(); });
+		            
+		            // 6. Dodanie markera do listy (wymagane, by działała Twoja wyszukiwarka i trasy)
+		            markersList.push(marker);
+        });    // ... reszta kodu ...
             var popupContent = '<h4>' + club.name + '</h4>';
             
             // Proste sprawdzanie czy link do zdjęcia jest poprawny
@@ -664,6 +689,7 @@
 </body>
 
 </html>
+
 
 
 
