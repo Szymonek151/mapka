@@ -107,20 +107,23 @@
             padding: 2px; /* Margines dla inputa w środku */
         }
 
-		.custom-pin 
-		{
-		    width: 30px;
-		    height: 30px;
-		    border-radius: 50% 50% 50% 0;
-		    background: #d32f2f; /* Tu zmienisz kolor */
-		    position: absolute;
-		    transform: rotate(-45deg);
-		    left: 50%;
-		    top: 50%;
-		    margin: -15px 0 0 -15px;
-		    border: 2px solid #fff;
-		    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+		/* Bazowy styl pinezki */
+		.custom-pin {
+			width: 30px;
+			height: 30px;
+			border-radius: 50% 50% 50% 0;
+			position: absolute;
+			transform: rotate(-45deg);
+			left: 50%;
+			top: 50%;
+			margin: -15px 0 0 -15px;
+			border: 2px solid #fff;
+			box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
 		}
+		
+		/* Kolory dla poszczególnych lig */
+		.pin-okr { background: #2e7d32; }    /* Ciemny zielony */
+		.pin-aklasa { background: #d32f2f; } /* Czerwony */
 
         /* Efekt po najechaniu myszką na całą wyszukiwarkę */
         .search-container:hover, .search-container:focus-within {
@@ -318,96 +321,64 @@
         var imageUrlOstoja ='https://static.regiowyniki.pl/flags/66.jpg'
 
         var clubs = [
-            { name: "Graf Chodywańce",      coords: [50.4115, 23.6338], img: imageUrlGraf },
-            { name: "Victoria Łukowa",      coords: [50.374568, 22.931503], img: imageUrlVictoria },
-            { name: "BKS Bodaczów",    		coords: [50.71847223, 23.02866667], img: imageUrlBKS },
-            { name: "Andoria Mircze",       coords: [50.648271, 23.899800], img: imageUrlAndoria },
-            { name: "Gryf Gmina Zamość",    coords: [50.718213, 23.124866], img: imageUrlGryf }, 
-            { name: "Huragan Hrubieszów",   coords: [50.819063, 23.938947], img: imageUrlHuragan },
-            { name: "Pogoń 96 Łaszczówka",  coords: [50.433364, 23.441989], img: imageUrlPogon96 },
-            { name: "Huczwa Tyszowce",      coords: [50.620059, 23.697150], img: imageUrlHuczwa },
-            { name: "Korona Łaszczów",      coords: [50.531560, 23.730050], img: imageUrlKorona },
-            { name: "Omega Stary Zamość",   coords: [50.825782, 23.186894], img: imageUrlOmega },
-            { name: "Błękitni Obsza",       coords: [50.311309, 22.961576], img: imageUrlObsza },
-            { name: "Sparta Łabunie",       coords: [50.651703, 23.371076], img: imageUrlSparta },
-            { name: "Grom Różaniec",        coords: [50.334694, 22.833663], img: imageUrlGrom },
-            { name: "Olimpiakos Tarnogród", coords: [50.364096, 22.741249], img: imageUrlOlimpiakos },
-            { name: "Roztocze Szczebrzeszyn", coords: [50.698140, 22.982636], img: imageUrlRoztocze },
-            { name: "Potok Sitno",          coords: [50.751519, 23.366493], img: imageUrlPotok },
+            { name: "Graf Chodywańce",      coords: [50.4115, 23.6338], img: imageUrlGraf, league: 'okr' },
+            { name: "Victoria Łukowa",      coords: [50.374568, 22.931503], img: imageUrlVictoria, league: 'okr' },
+            { name: "BKS Bodaczów",    		coords: [50.71847223, 23.02866667], img: imageUrlBKS, league: 'okr' },
+            { name: "Andoria Mircze",       coords: [50.648271, 23.899800], img: imageUrlAndoria, league: 'okr' },
+            { name: "Gryf Gmina Zamość",    coords: [50.718213, 23.124866], img: imageUrlGryf, league: 'okr' }, 
+            { name: "Huragan Hrubieszów",   coords: [50.819063, 23.938947], img: imageUrlHuragan, league: 'okr' },
+            { name: "Pogoń 96 Łaszczówka",  coords: [50.433364, 23.441989], img: imageUrlPogon96, league: 'okr' },
+            { name: "Huczwa Tyszowce",      coords: [50.620059, 23.697150], img: imageUrlHuczwa, league: 'okr' },
+            { name: "Korona Łaszczów",      coords: [50.531560, 23.730050], img: imageUrlKorona, league: 'okr' },
+            { name: "Omega Stary Zamość",   coords: [50.825782, 23.186894], img: imageUrlOmega, league: 'okr' },
+            { name: "Błękitni Obsza",       coords: [50.311309, 22.961576], img: imageUrlObsza, league: 'okr' },
+            { name: "Sparta Łabunie",       coords: [50.651703, 23.371076], img: imageUrlSparta, league: 'okr' },
+            { name: "Grom Różaniec",        coords: [50.334694, 22.833663], img: imageUrlGrom, league: 'okr' },
+            { name: "Olimpiakos Tarnogród", coords: [50.364096, 22.741249], img: imageUrlOlimpiakos, league: 'okr' },
+            { name: "Roztocze Szczebrzeszyn", coords: [50.698140, 22.982636], img: imageUrlRoztocze, league: 'okr' },
+            { name: "Potok Sitno",          coords: [50.751519, 23.366493], img: imageUrlPotok, league: 'okr' },
 			
-			{ name: "Kryształ Werbkowice",  coords: [50.756550, 23.768443], img: imageUrlKrysztal },
-            { name: "Metalowiec Goraj",     coords: [50.722659, 22.672263], img: imageUrlMetalowiec },
-            { name: "Orkan Bełżec",         coords: [50.387933, 23.437782], img: imageUrlOrkan },
-            { name: "Sokół Zwierzyniec",    coords: [50.616298, 22.970837], img: imageUrlSokol },
-            { name: "Igros Krasnobród",     coords: [50.543778, 23.196106], img: imageUrlIgros },
-            { name: "Unia Hrubieszów",      coords: [50.806134, 23.879556], img: imageUrlUnia },
-            { name: "Włókniarz Frampol",    coords: [50.661389, 22.668206], img: imageUrlWlokniarz },
-            { name: "Olimpia Miączyn",      coords: [50.735711, 23.498972], img: imageUrlOlimpia },
-            { name: "Łada 1945 II Biłgoraj",coords: [50.544969, 22.717734], img: imageUrlLadaII },
-            { name: "Olender Sól",          coords: [50.495761, 22.620918], img: imageUrlSol },
-            { name: "Relax Księżpol",     	coords: [50.425960, 22.736928], img: imageUrlRelax },
-            { name: "Delta Nielisz",        coords: [50.788498, 23.041930], img: imageUrlDelta },
-            { name: "Orion Dereźnia",       coords: [50.504855, 22.704122], img: imageUrlOrion },
-            { name: "Ostoja Skierbieszów",  coords: [50.855185, 23.362913], img: imageUrlOstoja }
+			{ name: "Kryształ Werbkowice",  coords: [50.756550, 23.768443], img: imageUrlKrysztal, league: 'aklasa' },
+            { name: "Metalowiec Goraj",     coords: [50.722659, 22.672263], img: imageUrlMetalowiec, league: 'aklasa' },
+            { name: "Orkan Bełżec",         coords: [50.387933, 23.437782], img: imageUrlOrkan, league: 'aklasa' },
+            { name: "Sokół Zwierzyniec",    coords: [50.616298, 22.970837], img: imageUrlSokol, league: 'aklasa' },
+            { name: "Igros Krasnobród",     coords: [50.543778, 23.196106], img: imageUrlIgros, league: 'aklasa' },
+            { name: "Unia Hrubieszów",      coords: [50.806134, 23.879556], img: imageUrlUnia, league: 'aklasa' },
+            { name: "Włókniarz Frampol",    coords: [50.661389, 22.668206], img: imageUrlWlokniarz, league: 'aklasa' },
+            { name: "Olimpia Miączyn",      coords: [50.735711, 23.498972], img: imageUrlOlimpia, league: 'aklasa' },
+            { name: "Łada 1945 II Biłgoraj",coords: [50.544969, 22.717734], img: imageUrlLadaII, league: 'aklasa' },
+            { name: "Olender Sól",          coords: [50.495761, 22.620918], img: imageUrlSol, league: 'aklasa' },
+            { name: "Relax Księżpol",     	coords: [50.425960, 22.736928], img: imageUrlRelax, league: 'aklasa' },
+            { name: "Delta Nielisz",        coords: [50.788498, 23.041930], img: imageUrlDelta, league: 'aklasa' },
+            { name: "Orion Dereźnia",       coords: [50.504855, 22.704122], img: imageUrlOrion, league: 'aklasa' },
+            { name: "Ostoja Skierbieszów",  coords: [50.855185, 23.362913], img: imageUrlOstoja, league: 'aklasa' }
 			
         ];
 		var markersList = [];
-		        clubs.forEach(function(club) {
-		            // 1. Definicja nowej ikony (wygląd ustawiasz w CSS)
-		            var pinIcon = L.divIcon({
-		                className: 'custom-div-icon',
-		                html: "<div class='custom-pin'></div>",
-		                iconSize: [30, 30],
-		                iconAnchor: [15, 30] // Dół pinezki celuje w punkt na mapie
-		            });
+clubs.forEach(function(club) {
+		// Wybieramy kolor na podstawie ligi
+		var kolorKlasa = (club.league === 'okr') ? 'pin-okr' : 'pin-aklasa';
+	
+		var pinIcon = L.divIcon({
+			className: 'custom-div-icon',
+			// Tutaj dodajemy wybraną klasę koloru do diva
+			html: "<div class='custom-pin " + kolorKlasa + "'></div>",
+			iconSize: [30, 30],
+			iconAnchor: [15, 30]
+		});
+	
+		var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
 		
-		            // 2. Stworzenie markera z użyciem nowej ikony
-		            var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
-		
-		            // 3. Budowanie zawartości okienka (Popup)
-		            var popupContent = '<h4>' + club.name + '</h4>';
-		            
-		            // Sprawdzanie zdjęcia (Twoja oryginalna logika)
-		            if (club.img && club.img.length > 5) {
-		                popupContent += '<img src="' + club.img + '" alt="Herb ' + club.name + '" onerror="this.style.display=\'none\'">';
-		            } else {
-		                popupContent += '<p style="text-align:center; color:#666;">Brak zdjęcia</p>';
-		            }
-		            
-		            // 4. Przypisanie okienka do markera
-		            marker.bindPopup(popupContent, {
-		                closeButton: true,
-		                autoClose: false
-		            });
-		            
-		            // 5. Efekt najechania myszką (Twoja oryginalna logika)
-		            marker.on('mouseover', function(e) { this.openPopup(); });
-		            marker.on('mouseout', function(e) { this.closePopup(); });
-		            
-		            // 6. Dodanie markera do listy (wymagane, by działała Twoja wyszukiwarka i trasy)
-		            markersList.push(marker);
-        });    // ... reszta kodu ...
-            var popupContent = '<h4>' + club.name + '</h4>';
-            
-            // Proste sprawdzanie czy link do zdjęcia jest poprawny
-            if (club.img && club.img.length > 5) {
-                popupContent += '<img src="' + club.img + '" alt="Herb ' + club.name + '" onerror="this.style.display=\'none\'">';
-            } else {
-                popupContent += '<p style="text-align:center; color:#666;">Brak zdjęcia</p>';
-            }
-            
-            marker.bindPopup(popupContent, {
-                closeButton: true,
-                autoClose: false
-            });
-            
-            marker.on('mouseover', function(e) { this.openPopup(); });
-			marker.on('mouseout', function(e) { this.closePopup(); });
-            // Opcjonalnie: można usunąć zamykanie na mouseout, jeśli chcesz klikać w popup
-            // marker.on('mouseout', function(e) { this.closePopup(); });
-			markersList.push(marker);
-        });
-
+		// Reszta Twojego kodu (popupy, mouseover itp.) zostaje bez zmian
+		var popupContent = '<h4>' + club.name + '</h4>';
+		if (club.img && club.img.length > 5) {
+			popupContent += '<img src="' + club.img + '" alt="Herb ' + club.name + '" onerror="this.style.display=\'none\'">';
+		}
+		marker.bindPopup(popupContent, { closeButton: true, autoClose: false });
+		marker.on('mouseover', function(e) { this.openPopup(); });
+		marker.on('mouseout', function(e) { this.closePopup(); });
+		markersList.push(marker);
+	});
         // =======================================================
         // OBSŁUGA TABEL I WORKERA
         // =======================================================
@@ -689,6 +660,7 @@
 </body>
 
 </html>
+
 
 
 
