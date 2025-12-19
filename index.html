@@ -107,6 +107,21 @@
             padding: 2px; /* Margines dla inputa w środku */
         }
 
+				.custom-pin 
+		{
+		    width: 30px;
+		    height: 30px;
+		    border-radius: 50% 50% 50% 0;
+		    background: #d32f2f; /* Tu zmienisz kolor */
+		    position: absolute;
+		    transform: rotate(-45deg);
+		    left: 50%;
+		    top: 50%;
+		    margin: -15px 0 0 -15px;
+		    border: 2px solid #fff;
+		    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+		}
+
         /* Efekt po najechaniu myszką na całą wyszukiwarkę */
         .search-container:hover, .search-container:focus-within {
             box-shadow: 0 4px 12px rgba(0,0,0,0.4); /* Mocniejszy cień */
@@ -338,7 +353,15 @@
         ];
 		var markersList = [];
         clubs.forEach(function(club) {
-            var marker = L.marker(club.coords).addTo(mymap);
+   			 var pinIcon = L.divIcon({
+		        className: 'custom-div-icon',
+		        html: "<div class='custom-pin'></div>",
+		        iconSize: [30, 30],
+		        iconAnchor: [15, 30] // Punkt styku z ziemią (na dole pinezki)
+		    });
+
+    var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
+    // ... reszta kodu ...
             var popupContent = '<h4>' + club.name + '</h4>';
             
             // Proste sprawdzanie czy link do zdjęcia jest poprawny
@@ -641,3 +664,4 @@
 </body>
 
 </html>
+
