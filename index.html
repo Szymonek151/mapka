@@ -10,13 +10,13 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
     <style>
         html, body, #map { width: 100%; height: 100%; padding: 0; margin: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        /* Nowy styl - dotyczy TYLKO Twoich przycisków, Zoom zostaje normalny */
+        
 		.custom-map-btn {
 			background-color: #fff;
 			border: 2px solid rgba(0,0,0,0.2);
 			border-radius: 4px;
-			width: auto !important; /* Nie rozciągaj na siłę */
-			min-width: 100px;       /* Ale niech będą czytelne */
+			width: auto !important;
+			min-width: 100px;
 			display: block;
 			padding: 8px 15px !important;
 			font-weight: 600;
@@ -28,40 +28,33 @@
 			color: #333;
 		}
 
-		/* Kolorowe paski (bez zmian) */
-		.btn-okr { border-left: 5px solid #d32f2f; color: #d32f2f !important; }
-		.btn-aklasa { border-left: 5px solid #1976D2; color: #1976D2 !important; }
+		.btn-okr { border-left: 5px solid #2e7d32; color: #2e7d32 !important; } /* Zielony dla Okręgówki */
+		.btn-aklasa { border-left: 5px solid #d32f2f; color: #d32f2f !important; } /* Czerwony dla A Klasy */
 
 		.custom-map-btn:hover { background-color: #f4f4f4; }
 		#map-title {
             position: absolute;
-            top: 10px; /* Na samej górze */
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95); /* Lekko przeźroczysty */
+            background: rgba(255, 255, 255, 0.95);
             padding: 8px 25px;
             border-radius: 20px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             font-size: 16px;
             font-weight: 700;
             color: #2c3e50;
-            text-transform: uppercase; /* Wielkie litery wyglądają poważniej */
-            letter-spacing: 1px;       /* Lekkie rozstrzelenie liter */
+            text-transform: uppercase;
+            letter-spacing: 1px;
             white-space: nowrap;
-            pointer-events: none;      /* Żeby nie przeszkadzał w klikaniu */
+            pointer-events: none;
         }
-/* --- PRZYCISK "ZMIERZ TRASĘ" (Prawy Dolny Róg) --- */
+
         #btnTrasa {
             position: absolute;
-            top: auto;    /* Resetujemy górę */
-            left: auto;   /* Resetujemy lewą stronę */
-            
-            bottom: 30px; /* Odstęp od dołu (żeby nie zasłonić napisu OpenStreetMap) */
-            right: 10px;  /* Odstęp od prawej */
-            
-            transform: none; /* WAŻNE: Usuwamy centrowanie, bo teraz jest w rogu */
-            
+            bottom: 30px;
+            right: 10px;
             z-index: 1000;
             padding: 10px 20px;
             background: white;
@@ -77,135 +70,55 @@
             gap: 8px;
         }
         
-        #btnTrasa:hover {
-            transform: scale(1.05); /* Tylko lekkie powiększenie, bez przesuwania */
-            background-color: #f9f9f9;
-        }
-        
-        #btnTrasa.active {
-            background-color: #ffebee;
-            color: #c62828;
-            border: 2px solid #c62828;
-        }
+        #btnTrasa:hover { transform: scale(1.05); background-color: #f9f9f9; }
+        #btnTrasa.active { background-color: #ffebee; color: #c62828; border: 2px solid #c62828; }
 
-		/* --- WYSZUKIWARKA (Styl Google Maps) --- */
         .search-container {
             position: absolute;
-            top: 60px; /* Nieco niżej pod przyciskiem trasy */
+            top: 60px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 1000;
-            width: 320px; /* Optymalna szerokość */
+            width: 320px;
             max-width: 90%;
-            /* Wygląd pastylki */
             background: #fff;
             border-radius: 24px; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3); /* Miękki cień */
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            padding: 2px; /* Margines dla inputa w środku */
+            padding: 2px;
         }
 
-		/* Bazowy styl pinezki */
+        /* STYL PINEZKI - USUNIĘTO STAŁY KOLOR */
 		.custom-pin {
-			width: 30px;
-			height: 30px;
-			border-radius: 50% 50% 50% 0;
-			position: absolute;
-			transform: rotate(-45deg);
-			left: 50%;
-			top: 50%;
-			margin: -15px 0 0 -15px;
-			border: 2px solid #fff;
-			box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+		    width: 30px;
+		    height: 30px;
+		    border-radius: 50% 50% 50% 0;
+		    position: absolute;
+		    transform: rotate(-45deg);
+		    left: 50%;
+		    top: 50%;
+		    margin: -15px 0 0 -15px;
+		    border: 2px solid #fff;
+		    box-shadow: 1px 1px 4px rgba(0,0,0,0.5);
 		}
-		
-		/* Kolory dla poszczególnych lig */
-		.pin-okr { background: #2e7d32; }    /* Ciemny zielony */
-		.pin-aklasa { background: #d32f2f; } /* Czerwony */
 
-        /* Efekt po najechaniu myszką na całą wyszukiwarkę */
-        .search-container:hover, .search-container:focus-within {
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4); /* Mocniejszy cień */
-            width: 330px; /* Lekkie powiększenie */
-        }
+        /* KOLORY DLA LIG */
+        .pin-okr { background: #2e7d32; }    /* Zielony */
+        .pin-aklasa { background: #d32f2f; } /* Czerwony */
 
-        #search-input {
-            width: 100%;
-            height: 40px; /* Wysokość pola */
-            border: none;
-            outline: none;
-            background: transparent;
-            font-size: 16px;
-            padding-left: 20px; /* Tekst nie dotyka krawędzi */
-            border-radius: 24px;
-            font-family: 'Segoe UI', sans-serif;
-        }
+        .search-container:hover, .search-container:focus-within { box-shadow: 0 4px 12px rgba(0,0,0,0.4); width: 330px; }
+        #search-input { width: 100%; height: 40px; border: none; outline: none; background: transparent; font-size: 16px; padding-left: 20px; border-radius: 24px; }
+        #search-results { display: none; position: absolute; top: 50px; left: 0; right: 0; background: white; border-radius: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); max-height: 250px; overflow-y: auto; z-index: 1001; padding: 5px 0; }
+        .search-result-item { padding: 12px 20px; cursor: pointer; font-size: 14px; color: #444; border-bottom: 1px solid #f0f0f0; transition: background 0.1s; display: flex; align-items: center; }
+        .search-result-item::before { content: '⚽'; margin-right: 10px; font-size: 12px; opacity: 0.7; }
+        .search-result-item:hover { background-color: #fce4ec; color: #000; font-weight: 500; }
 
-        /* Lista wyników pod spodem */
-        #search-results {
-            display: none;
-            position: absolute;
-            top: 50px; /* Odstęp od paska wyszukiwania */
-            left: 0;
-            right: 0;
-            background: white;
-            border-radius: 8px; /* Lekko zaokrąglona lista */
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            max-height: 250px;
-            overflow-y: auto;
-            overflow-x: hidden;
-            z-index: 1001;
-            padding: 5px 0; /* Oddech góra/dół */
-        }
-
-        .search-result-item {
-            padding: 12px 20px;
-            cursor: pointer;
-            font-size: 14px;
-            color: #444;
-            border-bottom: 1px solid #f0f0f0;
-            transition: background 0.1s;
-            display: flex;
-            align-items: center;
-        }
-        
-        /* Dodajemy ikonkę piłki (lub kropki) przed nazwą klubu w wynikach */
-        .search-result-item::before {
-            content: '⚽'; /* Ikona */
-            margin-right: 10px;
-            font-size: 12px;
-            opacity: 0.7;
-        }
-
-        .search-result-item:last-child {
-            border-bottom: none;
-        }
-
-        .search-result-item:hover {
-            background-color: #fce4ec; /* Bardzo jasny róż przy najechaniu */
-            color: #000;
-            font-weight: 500;
-        }
-
-        /* --- STYL PANELU BOCZNEGO (TABELA) --- */
-        #side-panel {
-            position: fixed; top: 0; right: -450px; width: 450px; max-width: 100%; 
-            height: 100%; background: white; z-index: 2000; 
-            box-shadow: -5px 0 15px rgba(0,0,0,0.2);
-            transition: right 0.3s ease-in-out;
-            padding: 25px; box-sizing: border-box;
-            display: flex; flex-direction: column;
-        }
+        #side-panel { position: fixed; top: 0; right: -450px; width: 450px; max-width: 100%; height: 100%; background: white; z-index: 2000; box-shadow: -5px 0 15px rgba(0,0,0,0.2); transition: right 0.3s ease-in-out; padding: 25px; box-sizing: border-box; display: flex; flex-direction: column; }
         #side-panel.open { right: 0; }
-        .close-btn {
-            align-self: flex-end; font-size: 30px; cursor: pointer; 
-            background: none; border: none; color: #888; margin-bottom: 10px;
-        }
+        .close-btn { align-self: flex-end; font-size: 30px; cursor: pointer; background: none; border: none; color: #888; margin-bottom: 10px; }
         .close-btn:hover { color: #d32f2f; }
-        
-        /* Tabela w panelu */
         #table-content { flex-grow: 1; overflow-y: auto; }
         #table-content table { width: 100%; border-collapse: collapse; font-size: 14px; }
         #table-content th { background-color: #222; color: white; padding: 10px; position: sticky; top: 0; }
@@ -213,31 +126,24 @@
         #table-content td:nth-child(2) { text-align: left; font-weight: 600; }
         .points-cell { background-color: #ffebee; color: #c62828; font-weight: bold; }
         
-        /* Popup mapy */
         .leaflet-popup-content-wrapper { border-radius: 8px; }
         .leaflet-popup-content img { max-width: 120px; display: block; margin: 0 auto 10px; }
         .leaflet-popup-content h4 { text-align: center; margin: 0 0 5px; font-size: 18px; color: #333; }
-
     </style>
 </head>
 
 <body>
     <div id="map-title">⚽ Mapa Klubów Zamojszczyzny</div>
     <button id="btnTrasa">📏 Zmierz trasę</button>
-	
 	<div class="search-container">
-    <input type="text" id="search-input" placeholder="🔍 Szukaj klubu...">
-    <div id="search-results"></div>
+        <input type="text" id="search-input" placeholder="🔍 Szukaj klubu...">
+        <div id="search-results"></div>
 	</div>
-	
     <div id="map"></div>
-	
     <div id="side-panel">
         <button class="close-btn" onclick="closePanel()">×</button>
         <h3 id="panel-title" style="margin-top: 0;">Tabela Ligowa</h3>
-        <div id="table-content">
-            <p style="text-align: center; color: #666;">Wybierz ligę z mapy.</p>
-        </div>
+        <div id="table-content"><p style="text-align: center; color: #666;">Wybierz ligę z mapy.</p></div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -245,49 +151,18 @@
 	<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
     <script>
-        // =======================================================
-        // KONFIGURACJA LINKÓW DO TABEL
-        // =======================================================
-        
-        // Usunięto podwójny slash '//' przed '?' dla pewności
         var urlOkregowka = 'https://tabelka.szalachaszymon.workers.dev/?t='; 
-        var urlAKlasa = 'https://tabelka2.szalachaszymon.workers.dev/?t='; // <--- WKLEJ TUTAJ LINK DO A KLASY
+        var urlAKlasa = 'https://tabelka2.szalachaszymon.workers.dev/?t='; 
 
-
-        // =======================================================
-        // MAPA I WARSTWY
-        // =======================================================
-
-        var mymap = L.map('map', {
-            minZoom: 8,
-            maxZoom: 20, 
-            fullscreenControl: true
-        }).setView([50.60, 23.25], 9);
-        
-        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '© OpenStreetMap contributors'
-        });
-
-        // Uwaga: Klucz API MapTiler jest publiczny w kodzie źródłowym
-        var satelita = L.tileLayer('https://api.maptiler.com/maps/satellite/{z}/{x}/{y}@2x.jpg?key=m1zA7Cid129ZGwBsHJKc', {
-            maxZoom: 20,
-            attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">© MapTiler</a>'
-        });
-
+        var mymap = L.map('map', { minZoom: 8, maxZoom: 20, fullscreenControl: true }).setView([50.60, 23.25], 9);
+        var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap contributors' });
+        var satelita = L.tileLayer('https://api.maptiler.com/maps/satellite/{z}/{x}/{y}@2x.jpg?key=m1zA7Cid129ZGwBsHJKc', { attribution: '© MapTiler' });
         osm.addTo(mymap);
 
-        var baseMaps = {
-            "Mapa drogowa": osm,
-            "Satelita": satelita
-        };
-
+        var baseMaps = { "Mapa drogowa": osm, "Satelita": satelita };
         L.control.layers(baseMaps).addTo(mymap);
 
-        // =======================================================
-        // BAZA DANYCH KLUBÓW
-        // =======================================================
-        
+        // Herby (Zmienne bez zmian)
         var imageUrlGraf = 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFeNGHzaotKd0YpUVN3y9_LRO7SXej81ZlPw&s';
         var imageUrlVictoria ='https://tmssl.akamaized.net//images/wappen/big/72580.png?lm=1705854612';
         var imageUrlBKS ='https://static.regiowyniki.pl/flags/7775.jpg';
@@ -304,7 +179,6 @@
         var imageUrlOlimpiakos ='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxsKf838FdN9Dy-l9frMqcCjq3fi-QLLk15A&s';
         var imageUrlRoztocze ='https://static.regiowyniki.pl/flags/16.jpg';
         var imageUrlPotok ='https://static.regiowyniki.pl/flags/174.jpg';
-		
 		var imageUrlKrysztal ='https://static.regiowyniki.pl/flags/76.jpg';
         var imageUrlMetalowiec ='https://static.regiowyniki.pl/flags/169.jpg';
         var imageUrlOrkan ='https://static.regiowyniki.pl/flags/72.jpg';
@@ -318,100 +192,81 @@
         var imageUrlRelax ='https://static.regiowyniki.pl/flags/7961.jpg';
         var imageUrlDelta ='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRZBOHsWknKi4VpkUgufSMLEe2VGbDh1zDlVA&s';
         var imageUrlOrion ='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkepS6f-3kMO8j2sOjlhJIw0UymUJBA0h64g&s';
-        var imageUrlOstoja ='https://static.regiowyniki.pl/flags/66.jpg'
+        var imageUrlOstoja ='https://static.regiowyniki.pl/flags/66.jpg';
 
+        // Baza danych z dopisaną ligą (league: 'okr' lub 'aklasa')
         var clubs = [
-            { name: "Graf Chodywańce",      coords: [50.4115, 23.6338], img: imageUrlGraf, league: 'okr' },
-            { name: "Victoria Łukowa",      coords: [50.374568, 22.931503], img: imageUrlVictoria, league: 'okr' },
-            { name: "BKS Bodaczów",    		coords: [50.71847223, 23.02866667], img: imageUrlBKS, league: 'okr' },
-            { name: "Andoria Mircze",       coords: [50.648271, 23.899800], img: imageUrlAndoria, league: 'okr' },
-            { name: "Gryf Gmina Zamość",    coords: [50.718213, 23.124866], img: imageUrlGryf, league: 'okr' }, 
-            { name: "Huragan Hrubieszów",   coords: [50.819063, 23.938947], img: imageUrlHuragan, league: 'okr' },
-            { name: "Pogoń 96 Łaszczówka",  coords: [50.433364, 23.441989], img: imageUrlPogon96, league: 'okr' },
-            { name: "Huczwa Tyszowce",      coords: [50.620059, 23.697150], img: imageUrlHuczwa, league: 'okr' },
-            { name: "Korona Łaszczów",      coords: [50.531560, 23.730050], img: imageUrlKorona, league: 'okr' },
-            { name: "Omega Stary Zamość",   coords: [50.825782, 23.186894], img: imageUrlOmega, league: 'okr' },
-            { name: "Błękitni Obsza",       coords: [50.311309, 22.961576], img: imageUrlObsza, league: 'okr' },
-            { name: "Sparta Łabunie",       coords: [50.651703, 23.371076], img: imageUrlSparta, league: 'okr' },
-            { name: "Grom Różaniec",        coords: [50.334694, 22.833663], img: imageUrlGrom, league: 'okr' },
+            { name: "Graf Chodywańce", coords: [50.4115, 23.6338], img: imageUrlGraf, league: 'okr' },
+            { name: "Victoria Łukowa", coords: [50.374568, 22.931503], img: imageUrlVictoria, league: 'okr' },
+            { name: "BKS Bodaczów", coords: [50.71847223, 23.02866667], img: imageUrlBKS, league: 'okr' },
+            { name: "Andoria Mircze", coords: [50.648271, 23.899800], img: imageUrlAndoria, league: 'okr' },
+            { name: "Gryf Gmina Zamość", coords: [50.718213, 23.124866], img: imageUrlGryf, league: 'okr' }, 
+            { name: "Huragan Hrubieszów", coords: [50.819063, 23.938947], img: imageUrlHuragan, league: 'okr' },
+            { name: "Pogoń 96 Łaszczówka", coords: [50.433364, 23.441989], img: imageUrlPogon96, league: 'okr' },
+            { name: "Huczwa Tyszowce", coords: [50.620059, 23.697150], img: imageUrlHuczwa, league: 'okr' },
+            { name: "Korona Łaszczów", coords: [50.531560, 23.730050], img: imageUrlKorona, league: 'okr' },
+            { name: "Omega Stary Zamość", coords: [50.825782, 23.186894], img: imageUrlOmega, league: 'okr' },
+            { name: "Błękitni Obsza", coords: [50.311309, 22.961576], img: imageUrlObsza, league: 'okr' },
+            { name: "Sparta Łabunie", coords: [50.651703, 23.371076], img: imageUrlSparta, league: 'okr' },
+            { name: "Grom Różaniec", coords: [50.334694, 22.833663], img: imageUrlGrom, league: 'okr' },
             { name: "Olimpiakos Tarnogród", coords: [50.364096, 22.741249], img: imageUrlOlimpiakos, league: 'okr' },
             { name: "Roztocze Szczebrzeszyn", coords: [50.698140, 22.982636], img: imageUrlRoztocze, league: 'okr' },
-            { name: "Potok Sitno",          coords: [50.751519, 23.366493], img: imageUrlPotok, league: 'okr' },
-			
-			{ name: "Kryształ Werbkowice",  coords: [50.756550, 23.768443], img: imageUrlKrysztal, league: 'aklasa' },
-            { name: "Metalowiec Goraj",     coords: [50.722659, 22.672263], img: imageUrlMetalowiec, league: 'aklasa' },
-            { name: "Orkan Bełżec",         coords: [50.387933, 23.437782], img: imageUrlOrkan, league: 'aklasa' },
-            { name: "Sokół Zwierzyniec",    coords: [50.616298, 22.970837], img: imageUrlSokol, league: 'aklasa' },
-            { name: "Igros Krasnobród",     coords: [50.543778, 23.196106], img: imageUrlIgros, league: 'aklasa' },
-            { name: "Unia Hrubieszów",      coords: [50.806134, 23.879556], img: imageUrlUnia, league: 'aklasa' },
-            { name: "Włókniarz Frampol",    coords: [50.661389, 22.668206], img: imageUrlWlokniarz, league: 'aklasa' },
-            { name: "Olimpia Miączyn",      coords: [50.735711, 23.498972], img: imageUrlOlimpia, league: 'aklasa' },
-            { name: "Łada 1945 II Biłgoraj",coords: [50.544969, 22.717734], img: imageUrlLadaII, league: 'aklasa' },
-            { name: "Olender Sól",          coords: [50.495761, 22.620918], img: imageUrlSol, league: 'aklasa' },
-            { name: "Relax Księżpol",     	coords: [50.425960, 22.736928], img: imageUrlRelax, league: 'aklasa' },
-            { name: "Delta Nielisz",        coords: [50.788498, 23.041930], img: imageUrlDelta, league: 'aklasa' },
-            { name: "Orion Dereźnia",       coords: [50.504855, 22.704122], img: imageUrlOrion, league: 'aklasa' },
-            { name: "Ostoja Skierbieszów",  coords: [50.855185, 23.362913], img: imageUrlOstoja, league: 'aklasa' }
-			
+            { name: "Potok Sitno", coords: [50.751519, 23.366493], img: imageUrlPotok, league: 'okr' },
+			{ name: "Kryształ Werbkowice", coords: [50.756550, 23.768443], img: imageUrlKrysztal, league: 'aklasa' },
+            { name: "Metalowiec Goraj", coords: [50.722659, 22.672263], img: imageUrlMetalowiec, league: 'aklasa' },
+            { name: "Orkan Bełżec", coords: [50.387933, 23.437782], img: imageUrlOrkan, league: 'aklasa' },
+            { name: "Sokół Zwierzyniec", coords: [50.616298, 22.970837], img: imageUrlSokol, league: 'aklasa' },
+            { name: "Igros Krasnobród", coords: [50.543778, 23.196106], img: imageUrlIgros, league: 'aklasa' },
+            { name: "Unia Hrubieszów", coords: [50.806134, 23.879556], img: imageUrlUnia, league: 'aklasa' },
+            { name: "Włókniarz Frampol", coords: [50.661389, 22.668206], img: imageUrlWlokniarz, league: 'aklasa' },
+            { name: "Olimpia Miączyn", coords: [50.735711, 23.498972], img: imageUrlOlimpia, league: 'aklasa' },
+            { name: "Łada 1945 II Biłgoraj", coords: [50.544969, 22.717734], img: imageUrlLadaII, league: 'aklasa' },
+            { name: "Olender Sól", coords: [50.495761, 22.620918], img: imageUrlSol, league: 'aklasa' },
+            { name: "Relax Księżpol", coords: [50.425960, 22.736928], img: imageUrlRelax, league: 'aklasa' },
+            { name: "Delta Nielisz", coords: [50.788498, 23.041930], img: imageUrlDelta, league: 'aklasa' },
+            { name: "Orion Dereźnia", coords: [50.504855, 22.704122], img: imageUrlOrion, league: 'aklasa' },
+            { name: "Ostoja Skierbieszów", coords: [50.855185, 23.362913], img: imageUrlOstoja, league: 'aklasa' }
         ];
+
 		var markersList = [];
-clubs.forEach(function(club) {
-		// Wybieramy kolor na podstawie ligi
-		var kolorKlasa = (club.league === 'okr') ? 'pin-okr' : 'pin-aklasa';
-	
-		var pinIcon = L.divIcon({
-			className: 'custom-div-icon',
-			// Tutaj dodajemy wybraną klasę koloru do diva
-			html: "<div class='custom-pin " + kolorKlasa + "'></div>",
-			iconSize: [30, 30],
-			iconAnchor: [15, 30]
-		});
-	
-		var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
-		
-		// Reszta Twojego kodu (popupy, mouseover itp.) zostaje bez zmian
-		var popupContent = '<h4>' + club.name + '</h4>';
-		if (club.img && club.img.length > 5) {
-			popupContent += '<img src="' + club.img + '" alt="Herb ' + club.name + '" onerror="this.style.display=\'none\'">';
-		}
-		marker.bindPopup(popupContent, { closeButton: true, autoClose: false });
-		marker.on('mouseover', function(e) { this.openPopup(); });
-		marker.on('mouseout', function(e) { this.closePopup(); });
-		markersList.push(marker);
-	});
-        // =======================================================
-        // OBSŁUGA TABEL I WORKERA
-        // =======================================================
+        clubs.forEach(function(club) {
+            // Wybór klasy koloru na podstawie ligi
+            var pinColorClass = (club.league === 'okr') ? 'pin-okr' : 'pin-aklasa';
 
+   			var pinIcon = L.divIcon({
+		        className: 'custom-div-icon',
+		        html: "<div class='custom-pin " + pinColorClass + "'></div>",
+		        iconSize: [30, 30],
+		        iconAnchor: [15, 30]
+		    });
+
+    	    var marker = L.marker(club.coords, { icon: pinIcon }).addTo(mymap);
+            var popupContent = '<h4>' + club.name + '</h4>';
+            
+            if (club.img && club.img.length > 5) {
+                popupContent += '<img src="' + club.img + '" alt="Herb ' + club.name + '" onerror="this.style.display=\'none\'">';
+            } else {
+                popupContent += '<p style="text-align:center; color:#666;">Brak zdjęcia</p>';
+            }
+            
+            marker.bindPopup(popupContent, { closeButton: true, autoClose: false });
+            marker.on('mouseover', function(e) { this.openPopup(); });
+			marker.on('mouseout', function(e) { this.closePopup(); });
+			markersList.push(marker);
+        });
+
+        // Obsługa tabel i workerów (bez zmian)
         var currentLeague = null; 
-
-        function closePanel() {
-            var panel = document.getElementById('side-panel');
-            panel.classList.remove('open');
-            currentLeague = null; 
-        }
+        function closePanel() { var panel = document.getElementById('side-panel'); panel.classList.remove('open'); currentLeague = null; }
 
         function toggleTable(type) {
             var panel = document.getElementById('side-panel');
             var title = document.getElementById('panel-title');
             var isOpen = panel.classList.contains('open');
-            
-            var targetUrl = '';
-            var targetTitle = '';
+            var targetUrl = (type === 'okregowka') ? urlOkregowka : urlAKlasa;
+            var targetTitle = (type === 'okregowka') ? 'Zamojska Klasa Okręgowa' : 'Zamojska A Klasa';
 
-            if (type === 'okregowka') {
-                targetUrl = urlOkregowka;
-                targetTitle = 'Zamojska Klasa Okręgowa';
-            } else if (type === 'aklasa') {
-                targetUrl = urlAKlasa;
-                targetTitle = 'Zamojska A Klasa';
-            }
-
-            if (isOpen && currentLeague === type) {
-                closePanel();
-                return;
-            }
-
+            if (isOpen && currentLeague === type) { closePanel(); return; }
             panel.classList.add('open');
             title.innerText = targetTitle;
             currentLeague = type;
@@ -420,83 +275,26 @@ clubs.forEach(function(club) {
 
         function loadTableData(urlBase) {
             var container = document.getElementById('table-content');
-            
-            if (!urlBase) {
-                container.innerHTML = '<p style="text-align:center; padding: 20px; color: red;">Link do tabeli nie został jeszcze skonfigurowany.</p>';
-                return;
-            }
-
-            container.innerHTML = '<p style="text-align:center; padding: 20px; color: #666;">Pobieranie danych...</p>';
-
-            var finalUrl = urlBase;
-            if (urlBase.indexOf('workers.dev') !== -1) {
-                 finalUrl = urlBase + new Date().getTime();
-            }
-
-            fetch(finalUrl)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Błąd sieci: ' + response.status);
-                    }
-                    return response.json();
-                }) 
+            if (!urlBase) { container.innerHTML = '<p style="color:red;">Link nie skonfigurowany.</p>'; return; }
+            container.innerHTML = '<p style="text-align:center; color:#666;">Pobieranie danych...</p>';
+            fetch(urlBase + new Date().getTime())
+                .then(response => response.json()) 
                 .then(data => {
-                    if (!Array.isArray(data)) {
-                        console.error("Otrzymane dane:", data);
-                        throw new Error("Otrzymano błędny format danych (nie jest to lista).");
-                    }
-
-                    let html = '<table>';
-                    html += `
-                        <thead>
-                            <tr>
-                                <th style="width: 10%;">#</th>
-                                <th style="text-align:left;">Drużyna</th>
-                                <th>M</th>
-                                <th>Pkt</th>
-                                <th style="font-size: 11px;">Bramki</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                    `;
-
+                    let html = '<table><thead><tr><th>#</th><th style="text-align:left;">Drużyna</th><th>M</th><th>Pkt</th><th>Gole</th></tr></thead><tbody>';
                     data.forEach(club => {
-                        html += `
-                            <tr>
-                                <td>${club.rank}.</td>
-                                <td>${club.team}</td>
-                                <td>${club.matches}</td>
-                                <td class="points-cell">${club.points}</td>
-                                <td style="font-size: 11px; color: #666; white-space: nowrap;">${club.goals}</td>
-                            </tr>
-                        `;
+                        html += `<tr><td>${club.rank}.</td><td>${club.team}</td><td>${club.matches}</td><td class="points-cell">${club.points}</td><td style="font-size:11px;">${club.goals}</td></tr>`;
                     });
-
-                    html += '</tbody></table>';
-                    html += '<p style="font-size:10px; text-align:right; margin-top:10px; color:#999;">Dane: 90minut.pl</p>';
-
+                    html += '</tbody></table><p style="font-size:10px; text-align:right; color:#999;">Dane: 90minut.pl</p>';
                     container.innerHTML = html;
-                })
-                .catch(error => {
-                    container.innerHTML = '<p style="color:red; text-align:center;">Nie udało się pobrać danych.<br><small>' + error.message + '</small></p>';
-                    console.error('Szczegóły błędu:', error);
-                });
+                }).catch(e => { container.innerHTML = '<p style="color:red;">Błąd pobierania.</p>'; });
         }
-
-        // =======================================================
-        // KONTROLKI (PRZYCISKI NA MAPIE)
-        // =======================================================
 
         L.Control.TableButtonOkr = L.Control.extend({
             onAdd: function(map) {
                 var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
                 var button = L.DomUtil.create('button', 'custom-map-btn btn-okr', container);
                 button.innerHTML = 'Okręgówka'; 
-                button.title = "Pokaż tabelę Klasy Okręgowej";
-                L.DomEvent.on(button, 'click', function(e) {
-                    L.DomEvent.stopPropagation(e);
-                    toggleTable('okregowka');
-                });
+                L.DomEvent.on(button, 'click', function(e) { L.DomEvent.stopPropagation(e); toggleTable('okregowka'); });
                 return container;
             }
         });
@@ -506,162 +304,42 @@ clubs.forEach(function(club) {
                 var container = L.DomUtil.create('div', 'leaflet-bar leaflet-control');
                 var button = L.DomUtil.create('button', 'custom-map-btn btn-aklasa', container);
                 button.innerHTML = 'A - Klasa'; 
-                button.title = "Pokaż tabelę A Klasy";
-                L.DomEvent.on(button, 'click', function(e) {
-                    L.DomEvent.stopPropagation(e);
-                    toggleTable('aklasa');
-                });
+                L.DomEvent.on(button, 'click', function(e) { L.DomEvent.stopPropagation(e); toggleTable('aklasa'); });
                 return container;
             }
         });
 
-        var btnOkr = new L.Control.TableButtonOkr({ position: 'bottomleft' });
-        btnOkr.addTo(mymap);
+        new L.Control.TableButtonOkr({ position: 'bottomleft' }).addTo(mymap);
+        new L.Control.TableButtonAKlasa({ position: 'bottomleft' }).addTo(mymap);
 
-        var btnAKlasa = new L.Control.TableButtonAKlasa({ position: 'bottomleft' });
-        btnAKlasa.addTo(mymap);
-		// --- NOWA FUNKCJONALNOŚĆ: MIERZENIE TRASY ---
-
-		var isRoutingMode = false;       
-		var routePoints = [];            
-		var routingControl = null;       
-		var btn = document.getElementById('btnTrasa');
-
-		// Funkcja obsługująca kliknięcie (z poprawioną nazwą mymap)
+		// Mierzenie trasy i wyszukiwarka (bez zmian)
+		var isRoutingMode = false, routePoints = [], routingControl = null;
 		function handleRouteClick(e) {
-			var marker = e.target;
-			marker.closePopup();
-
-			var latlng = marker.getLatLng();
-
-			if (routePoints.length === 0) {
-				// START
-				if (routingControl) {
-					mymap.removeControl(routingControl); // POPRAWKA: mymap zamiast map
-					routingControl = null;
-				}
-				routePoints.push(latlng);
-				alert("Punkt START wybrany. Wybierz teraz cel.");
-				
-			} else if (routePoints.length === 1) {
-				// META
-				routePoints.push(latlng);
-				
-				// Rysujemy trasę
-				routingControl = L.Routing.control({
-					waypoints: routePoints,
-					draggableWaypoints: false,
-					routeWhileDragging: false,
-					show: true,
-                    lineOptions: {
-                        styles: [{color: 'blue', opacity: 0.6, weight: 6}]
-                    }
-				}).addTo(mymap); // POPRAWKA: mymap zamiast map
-
-				routePoints = [];
-			}
+			var marker = e.target; marker.closePopup(); var latlng = marker.getLatLng();
+			if (routePoints.length === 0) { if (routingControl) { mymap.removeControl(routingControl); } routePoints.push(latlng); alert("Punkt START wybrany. Wybierz cel."); } 
+            else if (routePoints.length === 1) { routePoints.push(latlng); routingControl = L.Routing.control({ waypoints: routePoints, draggableWaypoints: false, show: true, lineOptions: { styles: [{color: 'blue', opacity: 0.6, weight: 6}] } }).addTo(mymap); routePoints = []; }
 		}
-
-		btn.addEventListener('click', function() {
+		document.getElementById('btnTrasa').addEventListener('click', function() {
 			isRoutingMode = !isRoutingMode;
-
-			if (isRoutingMode) {
-				// WŁĄCZANIE
-				btn.innerHTML = "❌ Wyłącz mierzenie";
-				btn.style.background = "#ffcccc";
-				document.getElementById('map').style.cursor = "crosshair";
-
-				markersList.forEach(function(m) {
-					m.on('click', handleRouteClick);
-				});
-
-			} else {
-				// WYŁĄCZANIE
-				btn.innerHTML = "📏 Zmierz trasę";
-				btn.style.background = "white";
-				document.getElementById('map').style.cursor = "";
-
-				markersList.forEach(function(m) {
-					m.off('click', handleRouteClick);
-				});
-
-				if (routingControl) {
-					mymap.removeControl(routingControl); // POPRAWKA: mymap zamiast map
-					routingControl = null;
-				}
-				routePoints = [];
-			}
+			if (isRoutingMode) { this.innerHTML = "❌ Wyłącz mierzenie"; this.style.background = "#ffcccc"; document.getElementById('map').style.cursor = "crosshair"; markersList.forEach(m => m.on('click', handleRouteClick)); } 
+            else { this.innerHTML = "📏 Zmierz trasę"; this.style.background = "white"; document.getElementById('map').style.cursor = ""; markersList.forEach(m => m.off('click', handleRouteClick)); if (routingControl) { mymap.removeControl(routingControl); routingControl = null; } routePoints = []; }
 		});
-		
-				// =======================================================
-		// WYSZUKIWARKA KLUBÓW
-		// =======================================================
 
-		const searchInput = document.getElementById('search-input');
-		const searchResults = document.getElementById('search-results');
-
+		const searchInput = document.getElementById('search-input'), searchResults = document.getElementById('search-results');
 		searchInput.addEventListener('input', function() {
-			const query = this.value.toLowerCase();
-			searchResults.innerHTML = ''; // Czyścimy poprzednie wyniki
-
-			// Jeśli wpisano mniej niż 2 znaki, ukryj listę i przerwij
-			if (query.length < 2) {
-				searchResults.style.display = 'none';
-				return;
-			}
-
-			// Filtrujemy kluby (zachowując ich oryginalny indeks, by znaleźć marker)
-			// Tworzymy mapę z indeksami, bo metoda filter zmienia indeksy
-			const matches = clubs.map((club, index) => {
-				return { data: club, originalIndex: index };
-			}).filter(item => item.data.name.toLowerCase().includes(query));
-
+			const query = this.value.toLowerCase(); searchResults.innerHTML = '';
+			if (query.length < 2) { searchResults.style.display = 'none'; return; }
+			const matches = clubs.map((club, index) => ({ data: club, originalIndex: index })).filter(item => item.data.name.toLowerCase().includes(query));
 			if (matches.length > 0) {
 				searchResults.style.display = 'block';
-				
 				matches.forEach(match => {
-					const div = document.createElement('div');
-					div.className = 'search-result-item';
-					div.innerText = match.data.name;
-					
-					// Obsługa kliknięcia w wynik
-					div.addEventListener('click', function() {
-						// 1. Wyczyszczenie wyszukiwarki
-						searchInput.value = '';
-						searchResults.style.display = 'none';
-
-						// 2. Przybliżenie mapy (zoom 14)
-						mymap.setView(match.data.coords, 14);
-
-						// 3. Otwarcie dymku (popup)
-						// Używamy originalIndex, bo markersList ma tę samą kolejność co tablica clubs
-						const targetMarker = markersList[match.originalIndex];
-						if (targetMarker) {
-							targetMarker.openPopup();
-						}
-					});
-
+					const div = document.createElement('div'); div.className = 'search-result-item'; div.innerText = match.data.name;
+					div.addEventListener('click', function() { searchInput.value = ''; searchResults.style.display = 'none'; mymap.setView(match.data.coords, 14); markersList[match.originalIndex].openPopup(); });
 					searchResults.appendChild(div);
 				});
-			} else {
-				// Brak wyników
-				searchResults.style.display = 'none';
-			}
+			} else { searchResults.style.display = 'none'; }
 		});
-
-		// Ukryj wyniki, gdy klikniemy gdzieś indziej na stronie
-		document.addEventListener('click', function(e) {
-			if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-				searchResults.style.display = 'none';
-			}
-		});
-				
+		document.addEventListener('click', function(e) { if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) { searchResults.style.display = 'none'; } });
     </script>    
 </body>
-
 </html>
-
-
-
-
-
